@@ -42,7 +42,7 @@ const LoginScreen = () => {
     setIsPosting(false);
 
     if (wasSuccessful) {
-      router.replace('/');
+      router.replace('/(tabs)');
       return;
     }
 
