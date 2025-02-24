@@ -1,37 +1,40 @@
-import { useState } from 'react';
+import { useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
   KeyboardAvoidingView,
+  Pressable,
   ScrollView,
   useWindowDimensions,
   View,
-} from 'react-native';
+  Text,
+} from "react-native";
 
-import { router } from 'expo-router';
+import { router } from "expo-router";
 
-import ThemedButton from '@/components/ThemedButton';
-import ThemedLink from '@/components/ThemedLink';
-import { ThemedText } from '@/components/ThemedText';
-import ThemedTextInput from '@/components/ThemedTextInput';
-import { useThemeColor } from '@/hooks/useThemeColor';
-import { useAuthStore } from '@/core/auth/store/useAuthStore';
+import ThemedButton from "@/components/ThemedButton";
+import ThemedLink from "@/components/ThemedLink";
+import { ThemedText } from "@/components/ThemedText";
+import ThemedTextInput from "@/components/ThemedTextInput";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { useAuthStore } from "@/core/auth/store/useAuthStore";
 
 const LoginScreen = () => {
-  const { login } = useAuthStore();
+  const { login, token } = useAuthStore();
 
   const { height } = useWindowDimensions();
-  const backgroundColor = useThemeColor({}, 'background');
+  const backgroundColor = useThemeColor({}, "background");
 
+  // se utiliza para que una vez que llama al login, deja 'disable' el boton ingresar.
   const [isPosting, setIsPosting] = useState(false);
   const [form, setForm] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
+
 
   const onLogin = async () => {
     const { email, password } = form;
-
-    console.log({ email, password });
 
     if (email.length === 0 || password.length === 0) {
       return;
@@ -42,11 +45,13 @@ const LoginScreen = () => {
     setIsPosting(false);
 
     if (wasSuccessful) {
-      router.replace('/(tabs)');
+      router.replace("/(tabs)");
       return;
-    }
+    } else {
+      console.warn(email, token);
 
-    Alert.alert('Error', 'Usuario o contraseña no son correctos');
+      Alert.alert("Error", "Usuario o contraseña no son correctos");
+    }
   };
 
   return (
@@ -63,8 +68,8 @@ const LoginScreen = () => {
           }}
         >
           <ThemedText type="title">Ingresar</ThemedText>
-          <ThemedText style={{ color: 'grey' }}>
-            Por favor ingrese para continuar
+          <ThemedText style={{ color: "grey" }}>
+            Por favor ingrese su correo y contraseña
           </ThemedText>
         </View>
 
@@ -102,17 +107,22 @@ const LoginScreen = () => {
         </ThemedButton>
 
         {/* Spacer */}
+        <View style={{ marginTop: 10 }} />
+        <View>{isPosting && <ActivityIndicator />}</View>
+
+        {/* Spacer */}
         <View style={{ marginTop: 50 }} />
 
         {/* Enlace a registro */}
         <View
           style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <ThemedText>¿No tienes cuenta?</ThemedText>
+
           <ThemedLink href="/auth/register" style={{ marginHorizontal: 5 }}>
             Crear cuenta
           </ThemedLink>

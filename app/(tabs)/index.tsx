@@ -1,9 +1,51 @@
-import { Image, StyleSheet, Platform, Text } from 'react-native';
+import ThemedButton from '@/components/ThemedButton';
+import { useAuthStore } from '@/core/auth/store/useAuthStore';
+import { router } from 'expo-router';
+import React, { useEffect } from 'react';
+import { Image, StyleSheet, Platform, Text, Pressable, View } from 'react-native';
+import { SecureStorageAdapter } from '@/middelware/secure-storage.adapter';
+
+
 
 export default function HomeScreen() {
+  const {  status,token, logout , checkStatus}  =useAuthStore()
+
+  const salir = () => {
+    logout()
+    router.replace('/auth/login')
+  }
+
+  useEffect(() => {
+    const check = async () => {
+      const checkqueo = await checkStatus()
+      console.log(checkqueo)
+    }
+
+    check()
+  }, [])
+ 
+
+
   return (
     <>
       <Text>(tabs)Index.tsx</Text>
+
+        {/* Spacer */}
+        <View style={{ marginTop: 10 }} />
+
+        {/* Botón */}
+        <ThemedButton
+          icon="arrow-forward-outline"
+          onPress={salir}
+        >
+          Salir
+        </ThemedButton>
+
+        {/* Spacer */}
+        <View style={{ marginTop: 50 }} />
+
+
+
     </>  );
 }
 
