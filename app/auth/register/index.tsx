@@ -12,7 +12,8 @@ import {
   useWindowDimensions,
   View,
   Text,
-  ActivityIndicator
+  ActivityIndicator,
+  Alert
 } from 'react-native';
 
 const RegisterScreen = () => {
@@ -29,11 +30,19 @@ const RegisterScreen = () => {
   const { height } = useWindowDimensions();
   const backgroundColor = useThemeColor({}, 'background');
 
-  const onRegister  = () => {
-    const ok = register(form.email,form.password,form.fullname)
-    router.replace('/auth/login')
-    return;
+  const onRegister  = async () => {
+    setIsPosting(true);
+    const ok = await register(form.email, form.password, form.fullname);
+    setIsPosting(false);
 
+    if (ok) {
+      Alert.alert("Succesfull!", "Se ha registrado correctamente");
+      router.replace("/auth/login");
+      return;
+    }else{
+      Alert.alert("Email already exists!", "No se ha podido registrar");
+    }
+     
 
   }
 

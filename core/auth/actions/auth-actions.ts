@@ -8,16 +8,18 @@ export interface AuthResponse {
   isActive: boolean;
   roles: string[];
   token: string;
+  ok : boolean;
 }
 
-const returnUserToken = ( data: AuthResponse  ): { user: User; token: string; } => {
-  const { id, email, fullName, isActive, roles, token } = data;
+const returnUserToken = ( data: AuthResponse  ): { user: User; token: string; ok: boolean } => {
+  const { id, email, fullName, isActive, roles, token , ok } = data;
 
   const user: User = { id, email, fullName, isActive, roles,  };
 
   return {
     user,
     token,
+    ok,
   };
 };
 
@@ -40,7 +42,7 @@ export const authRegister = async (email: string, pas: string , fullname : strin
 
   try {
     const { data } = await productsApi.post<AuthResponse>('/register', { email,pas, fullname });
-
+    console.log(data)
     return returnUserToken(data);
     
   } catch (error) {

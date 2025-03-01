@@ -7,12 +7,14 @@ import { useAuthStore } from '@/core/auth/store/useAuthStore';
 import { useURL } from 'expo-linking';
 
 const RegisterScreen = () => {
+  return <Redirect href='/auth/login' />
+
   const { logout} = useAuthStore()
   const salir = () => {
     logout()
     router.replace('/auth/login')
   }  
-  
+ 
   <>
   <Text>Register</Text>
 
